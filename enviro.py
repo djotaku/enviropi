@@ -306,7 +306,7 @@ HEIGHT = disp.height
 
 # The city and timezone that you want to display.
 city_name = "Baltimore"
-time_zone = "America/NewYork"
+time_zone = "US/Eastern"
 
 # Values that alter the look of the background
 blur = 50
