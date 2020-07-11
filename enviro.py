@@ -17,6 +17,8 @@ from astral.geocoder import database, lookup
 from astral.sun import sun
 from datetime import datetime, timedelta
 
+import mqtt
+
 try:
     from smbus2 import SMBus
 except ImportError:
@@ -346,6 +348,10 @@ trend = "-"
 # Keep track of time elapsed
 start_time = time.time()
 
+# setup MQTT
+
+mqtt_temperature = mqtt.Publisher("masterbath/temp", "tanukimario.mushroomkingdom")
+
 while True:
     path = os.path.dirname(os.path.realpath(__file__))
     progress, period, day, local_dt = sun_moon_time(city_name, time_zone)
@@ -367,6 +373,9 @@ while True:
     avg_cpu_temp = sum(cpu_temps) / float(len(cpu_temps))
     corr_temperature = temperature - ((avg_cpu_temp - temperature) / factor)
 
+    # Changed corrected temperature to Fahernheit
+    corr_temperature = (corr_temperature * (9/5)) + 32
+
     if time_elapsed > 30:
         if min_temp is not None and max_temp is not None:
             if corr_temperature < min_temp:
@@ -377,7 +386,7 @@ while True:
             min_temp = corr_temperature
             max_temp = corr_temperature
 
-    temp_string = f"{corr_temperature:.0f}°C"
+    temp_string = f"{corr_temperature:.0f}°F"
     img = overlay_text(img, (68, 18), temp_string, font_lg, align_right=True)
     spacing = font_lg.getsize(temp_string)[1] + 1
     if min_temp is not None and max_temp is not None:
@@ -388,9 +397,13 @@ while True:
     temp_icon = Image.open(f"{path}/icons/temperature.png")
     img.paste(temp_icon, (margin, 18), mask=temp_icon)
 
+    # Publish temp to MQTT
+    success = mqtt_temperature.publish(corr_temperature)
+
     # Humidity
     humidity = bme280.get_humidity()
-    corr_humidity = correct_humidity(humidity, temperature, corr_temperature)
+    # need to modify temp back to celsius for this to work
+    corr_humidity = correct_humidity(humidity, temperature, ((corr_temperature-32)*(5/9)))
     humidity_string = f"{corr_humidity:.0f}%"
     img = overlay_text(img, (68, 48), humidity_string, font_lg, align_right=True)
     spacing = font_lg.getsize(humidity_string)[1] + 1
