@@ -351,6 +351,8 @@ start_time = time.time()
 # setup MQTT
 
 mqtt_temperature = mqtt.Publisher("masterbath/temp", "tanukimario.mushroomkingdom")
+mqtt_humidity = mqtt.Publisher("masterbath/humidity", "tanukimario.mushroomkingdom")
+mqtt_light = mqtt.Publisher("masterbath/illumination", "tanukimario.mushroomkingdom")
 
 while True:
     path = os.path.dirname(os.path.realpath(__file__))
@@ -412,6 +414,9 @@ while True:
     humidity_icon = Image.open(f"{path}/icons/humidity-{humidity_desc.lower()}.png")
     img.paste(humidity_icon, (margin, 48), mask=humidity_icon)
 
+    # Publish humidity to MQTT
+    success = mqtt_humidity.publish(corr_humidity)
+
     # Light
     light = ltr559.get_lux()
     light_string = f"{int(light):,}"
@@ -421,6 +426,9 @@ while True:
     img = overlay_text(img, (WIDTH - margin - 1, 18 + spacing), light_desc, font_sm, align_right=True, rectangle=True)
     light_icon = Image.open(f"{path}/icons/bulb-{light_desc.lower()}.png")
     img.paste(humidity_icon, (80, 18), mask=light_icon)
+
+    # Publish illumination to MQTT
+    sucess = mqtt_light.publish(light)
 
     # Pressure
     pressure = bme280.get_pressure()
