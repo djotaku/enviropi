@@ -6,6 +6,7 @@ fonts==0.0.3
 i2cdevice==0.0.7
 ltr559==0.1.1
 numpy==1.19.0
+paho-mqtt==1.5.0
 Pillow==7.2.0
 pimoroni-bme280==0.0.2
 pkg-resources==0.0.0
