@@ -442,5 +442,13 @@ while True:
     pressure_icon = Image.open(f"{path}/icons/weather-{pressure_desc.lower()}.png")
     img.paste(pressure_icon, (80, 48), mask=pressure_icon)
 
+    # use proximity sensor to control whether or not to light the display
+    prox = ltr559.get_proximity()
+    if prox > 16:
+        disp.set_backlight(12)
+    else:
+        disp.set_backlight(0)
+    print(f'{prox:05.02f}')
+
     # Display image
     disp.display(img)
