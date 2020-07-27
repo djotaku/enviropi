@@ -400,7 +400,8 @@ while True:
     img.paste(temp_icon, (margin, 18), mask=temp_icon)
 
     # Publish temp to MQTT
-    success = mqtt_temperature.publish(corr_temperature)
+    if int(time_elapsed) % 10 == 0:
+        success = mqtt_temperature.publish(corr_temperature)
 
     # Humidity
     humidity = bme280.get_humidity()
@@ -415,7 +416,8 @@ while True:
     img.paste(humidity_icon, (margin, 48), mask=humidity_icon)
 
     # Publish humidity to MQTT
-    success = mqtt_humidity.publish(corr_humidity)
+    if int(time_elapsed) % 10 == 0:
+        success = mqtt_humidity.publish(corr_humidity)
 
     # Light
     light = ltr559.get_lux()
@@ -428,7 +430,8 @@ while True:
     img.paste(humidity_icon, (80, 18), mask=light_icon)
 
     # Publish illumination to MQTT
-    sucess = mqtt_light.publish(light)
+    if int(time_elapsed) % 10 == 0:
+        sucess = mqtt_light.publish(light)
 
     # Pressure
     pressure = bme280.get_pressure()
@@ -448,7 +451,7 @@ while True:
         disp.set_backlight(12)
     else:
         disp.set_backlight(0)
-    print(f'{prox:05.02f}')
+    # print(f'{prox:05.02f}')
 
     # Display image
     disp.display(img)
