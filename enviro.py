@@ -18,6 +18,9 @@ from astral.sun import sun
 from datetime import datetime, timedelta
 
 import mqtt
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(asctime)s - %(message)s")
 
 try:
     from smbus2 import SMBus

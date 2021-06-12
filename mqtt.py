@@ -1,7 +1,9 @@
 """Publish state via MQTT."""
 
+import logging
 import paho.mqtt.publish as publish
 
+logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(asctime)s - %(message)s")
 
 class Publisher():
     """A class that will take care of publishing MQTT messages.
@@ -24,5 +26,5 @@ class Publisher():
             publish.single(self.channel, message, hostname=self.server, client_id=self.client_id)
             return True
         except:
-            print("Server DNS issue.")
+            logging.error("Server DNS issue.")
             return False
