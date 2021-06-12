@@ -7,7 +7,7 @@ i2cdevice==0.0.7
 ltr559==0.1.1
 numpy==1.19.0
 paho-mqtt==1.5.0
-Pillow==7.2.0
+Pillow==8.1.1
 pimoroni-bme280==0.0.2
 pkg-resources==0.0.0
 pms5003==0.0.5
