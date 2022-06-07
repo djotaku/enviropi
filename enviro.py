@@ -402,10 +402,6 @@ while True:
     temp_icon = Image.open(f"{path}/icons/temperature.png")
     img.paste(temp_icon, (margin, 18), mask=temp_icon)
 
-    # Publish temp to MQTT
-    if int(time_elapsed) % 10 == 0:
-        success = mqtt_temperature.publish(corr_temperature)
-
     # Humidity
     humidity = bme280.get_humidity()
     # need to modify temp back to celsius for this to work
@@ -418,10 +414,6 @@ while True:
     humidity_icon = Image.open(f"{path}/icons/humidity-{humidity_desc.lower()}.png")
     img.paste(humidity_icon, (margin, 48), mask=humidity_icon)
 
-    # Publish humidity to MQTT
-    if int(time_elapsed) % 10 == 0:
-        success = mqtt_humidity.publish(corr_humidity)
-
     # Light
     light = ltr559.get_lux()
     light_string = f"{int(light):,}"
@@ -431,10 +423,6 @@ while True:
     img = overlay_text(img, (WIDTH - margin - 1, 18 + spacing), light_desc, font_sm, align_right=True, rectangle=True)
     light_icon = Image.open(f"{path}/icons/bulb-{light_desc.lower()}.png")
     img.paste(humidity_icon, (80, 18), mask=light_icon)
-
-    # Publish illumination to MQTT
-    if int(time_elapsed) % 10 == 0:
-        sucess = mqtt_light.publish(light)
 
     # Pressure
     pressure = bme280.get_pressure()
@@ -458,3 +446,9 @@ while True:
 
     # Display image
     disp.display(img)
+
+    # Publish values to MQTT
+    if int(time_elapsed) % 10 == 0:
+        success = mqtt_temperature.publish(corr_temperature)
+        success = mqtt_humidity.publish(corr_humidity)
+        success = mqtt_light.publish(light)
