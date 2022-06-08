@@ -22,7 +22,7 @@ class Publisher():
                 "device_class":"temperature",
                 "name": "Master Bath Temperature",
                 "state_topic": self.topic,
-                "unit_of_mesaurement": "F",
+                "unit_of_measurement": "F",
                 "value_template": "{{value_json.temperature}}",
                 "unique_id": "MASTER_BATH_TEMPERATURE",
                 "device":{
