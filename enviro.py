@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 
 import mqtt
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(asctime)s - %(message)s")
 
@@ -356,6 +357,7 @@ start_time = time.time()
 mqtt_temperature = mqtt.Publisher("masterbath/temp", "tanukimario.mushroomkingdom")
 mqtt_humidity = mqtt.Publisher("masterbath/humidity", "tanukimario.mushroomkingdom")
 mqtt_light = mqtt.Publisher("masterbath/illumination", "tanukimario.mushroomkingdom")
+mqtt_publisher = mqtt.Publisher("homeassistant/sensor/masterbath/state", "tanukimario.mushroomkingdom")
 
 while True:
     path = os.path.dirname(os.path.realpath(__file__))
@@ -448,7 +450,11 @@ while True:
     disp.display(img)
 
     # Publish values to MQTT
+    mqtt_payload = {"temperature": f"{corr_temperature:.2f}",
+            "humidity": f"{corr_humidity:.2f}",
+            "illumination": f"{light:.2f}"}
     if int(time_elapsed) % 10 == 0:
         success = mqtt_temperature.publish(corr_temperature)
         success = mqtt_humidity.publish(corr_humidity)
         success = mqtt_light.publish(light)
+        success = mqtt_publisher.publish(json.dumps(mqtt_payload))

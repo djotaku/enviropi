@@ -1,5 +1,6 @@
 """Publish state via MQTT."""
 
+import json
 import logging
 import paho.mqtt.publish as publish
 
@@ -61,23 +62,26 @@ class Publisher():
                 }
 
         topic_base = "homeassistant/sensor/masterbath"
-        configs = [(temperature_config, f"{topic_base}T/config"),
-                (humidity_config, f"{topic_base}H/config"),
-                (light_sensor_config, f"{topic_base}L/config")]
+        configs = [(json.dumps(temperature_config), f"{topic_base}T/config"),
+                (json.dumps(humidity_config), f"{topic_base}H/config"),
+                (json.dumps(light_sensor_config), f"{topic_base}L/config")]
 
         for config in configs:
             self.publish(config[0], config[1], retain=True)
 
-
-    def publish(self, message, topic=self.topic, retain=False) -> bool:
+    def publish(self, message, topic="", retain=False) -> bool:
         """Publish message to MQTT server.
 
         :param message: the message to publish.
         """
-
+        if topic == "":
+            topic = self.topic
+        logging.debug(f"message = {message}")
+        logging.debug(f"topic = {topic}")
+        logging.debug(f"server = {self.server}")
         try:
             publish.single(topic, message, hostname=self.server, client_id=self.client_id)
             return True
-        except:
-            logging.error("Server DNS issue.")
+        except Exception as e:
+            logging.error(f"There was an error {e}")
             return False
