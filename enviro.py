@@ -354,9 +354,6 @@ start_time = time.time()
 
 # setup MQTT
 
-mqtt_temperature = mqtt.Publisher("masterbath/temp", "tanukimario.mushroomkingdom")
-mqtt_humidity = mqtt.Publisher("masterbath/humidity", "tanukimario.mushroomkingdom")
-mqtt_light = mqtt.Publisher("masterbath/illumination", "tanukimario.mushroomkingdom")
 mqtt_publisher = mqtt.Publisher("homeassistant/sensor/masterbath/state", "tanukimario.mushroomkingdom")
 
 while True:
@@ -454,7 +451,4 @@ while True:
             "humidity": corr_humidity,
             "illumination": light}
     if int(time_elapsed) % 10 == 0:
-        success = mqtt_temperature.publish(corr_temperature)
-        success = mqtt_humidity.publish(corr_humidity)
-        success = mqtt_light.publish(light)
         success = mqtt_publisher.publish(json.dumps(mqtt_payload))
