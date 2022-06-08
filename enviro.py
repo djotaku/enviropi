@@ -450,9 +450,9 @@ while True:
     disp.display(img)
 
     # Publish values to MQTT
-    mqtt_payload = {"temperature": f"{corr_temperature:.2f}",
-            "humidity": f"{corr_humidity:.2f}",
-            "illumination": f"{light:.2f}"}
+    mqtt_payload = {"temperature": corr_temperature,
+            "humidity": corr_humidity,
+            "illumination": light}
     if int(time_elapsed) % 10 == 0:
         success = mqtt_temperature.publish(corr_temperature)
         success = mqtt_humidity.publish(corr_humidity)
