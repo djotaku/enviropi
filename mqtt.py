@@ -16,7 +16,7 @@ class Publisher():
         self.server = server
         self.client_id = "bathroompi"
 
-    def send_origin_message(self):
+    def send_config_message(self):
         temperature_config = {
                 "device_class":"temperature",
                 "name": "Master Bath Temperature",
